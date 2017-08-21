@@ -29,11 +29,12 @@ public class RsaKeyUpdaterExceutor implements KeyUpdaterExceutor {
      *
      */
 //	public RsaKeyUpdater(String absolutePath,int updateInterval,KeyMap<KeyFile> keyMap) {
-    public RsaKeyUpdaterExceutor(String absolutePath, int updateInterval, KeyMap<Key> keyMap, Map<String, WrapperBuffer<KeyCipher>> wrapBufferMap) {
+    public RsaKeyUpdaterExceutor(String absolutePath, int updateInterval, KeyMap<Key> keyMap, Map<String, WrapperBuffer<KeyCipher>> wrapBufferMap) throws Exception {
         this.absolutePath = absolutePath;
         this.updateInterval = updateInterval;
         this.keyMap = keyMap;
         this.wrapBufferMap = wrapBufferMap;
+        refreshKeyFiles(absolutePath);
     }
 
 

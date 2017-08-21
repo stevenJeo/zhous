@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+  xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+  http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+  http://activemq.apache.org/schema/core">
+
+<!-- ota接口服务器（tomcat-web）q -->
+<!--如果有 多个ota接口服务器 ，视具体请求，通过配置转发（haproxy）
+	可以分配一台服务器负责处理注册（交换工作密钥），其他负责处理请求。
+	也可以分配一台服务器负责处理注册（交换工作密钥）和处理请求，其他只负责处理请求。
+	
+	如果只有一台服务器，必须负责处理注册和处理请求，normalRole=false；
+-->
+
+
+    
+    
+</beans>

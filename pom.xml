@@ -27,6 +27,7 @@
         <bouncycastle.bcprov-jdk15.version>140</bouncycastle.bcprov-jdk15.version>
         <commons-codec.version>1.6</commons-codec.version>
         <commons-lang.version>2.3</commons-lang.version>
+        <test.junit.version>4.12</test.junit.version>
     </properties>
 
     <dependencyManagement>
@@ -80,6 +81,11 @@
                 <version>${org.apache.activemq.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-pool</artifactId>
+                <version>${org.apache.activemq.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-mapper-lgpl</artifactId>
                 <version>${org.codehaus.jackson.version}</version>
@@ -104,6 +110,13 @@
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
                 <version>${commons-lang.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${test.junit.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>

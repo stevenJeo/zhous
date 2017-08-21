@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<!-- 日志文件存放目录 -->
+	<property name="LOG_HOME" value="logs" />
+	
+	<!-- 控制台日志 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>%d{HH:mm:ss.SSS} %-5level %logger{80} - %msg%n</Pattern>
+		</encoder>
+	</appender>
+	
+	<!-- 不同級別的文件記錄在不同的日誌文件中 -->
+	<appender name="FILEDEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--在工程目录下自动生成logs文件夹 -->
+			<FileNamePattern>${LOG_HOME}/log-debug.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<!-- 最多30个文件 -->
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+		</encoder>
+<!-- 		 过滤器，只记录DEBUG级别的日志 
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>DEBUG</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+ -->	
+ 	</appender>
+	
+<!-- 	<appender name="FILEINFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			在工程目录下自动生成logs文件夹
+			<FileNamePattern>${LOG_HOME}/log-info.%d{yyyy-MM-dd}.log</FileNamePattern>
+			最多30个文件
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+		</encoder>
+		过滤器，只记录INFO级别的日志
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<appender name="FILEERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			在工程目录下自动生成logs文件夹
+			<FileNamePattern>${LOG_HOME}/log-error.%d{yyyy-MM-dd}.log</FileNamePattern>
+			最多30个文件
+			<MaxHistory>30</MaxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+ -->
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILEDEBUG" />
+<!-- 		<appender-ref ref="FILEINFO" />
+		<appender-ref ref="FILEERROR" />
+ -->	
+ 	</root>
+	
+	<logger name="org.apache.activemq" level="INFO" />
+<!-- 	<logger name="org.owens.framework" level="DEBUG" /> 
+ -->	
+</configuration>

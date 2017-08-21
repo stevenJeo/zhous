@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd  
+    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+
+
+    <!-- 发送结果 -->
+    <bean id="coreService" class="org.base.framework.jms.JmsCoreService">
+        <property name="templateMap">
+            <map>
+                <entry key="unitTest_jmsTemplate" value="q_jmsTemplate_send_reply"/>
+            </map>
+        </property>
+        <property name="destinationMap">
+            <map>
+                <entry key="unitTest_jmsDestination" value="q_name_backend_send_reply"/>
+            </map>
+        </property>
+        <property name="doesPerformanceTrack" value="true"/>
+        <property name="timeThreshold" value="1000"/>
+
+    </bean>
+
+
+    <bean id="jmsFactory_send_reply" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
+        <property name="connectionFactory">
+            <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                <property name="brokerURL">
+                    <value>${q.brokerUrl_recv_upd}</value><!-- 对应前端的“接收” -->
+                </property>
+                <property name="useAsyncSend" value="true"/>
+            </bean>
+        </property>
+        <property name="maxConnections" value="100"/>
+        <property name="maximumActiveSessionPerConnection" value="10"/>
+    </bean>
+
+    <bean id="q_jmsTemplate_send_reply" class="org.springframework.jms.core.JmsTemplate">
+        <property name="connectionFactory">
+            <ref bean="jmsFactory_send_reply"/>
+        </property>
+    </bean>
+
+    <bean id="q_name_backend_send_reply" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0">
+            <value>${q.name.backend.send.reply_1}</value>
+        </constructor-arg>
+    </bean>
+
+
+    <!-- 一般情况下,能适应大多数应用,不需要修改
+                接收请求的Q只有一个.详细见backend_coordinator定义.
+      -->
+    <bean id="q_name_backend_get_request" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg index="0">
+            <value>${q.name.backend.get.request_1}</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="backend_coordinator" class="org.base.framework.jms.server.BackendHandler">
+        <property name="timeout" value="10000"/>
+        <property name="sessionAckMode" value="3"/>
+        <property name="qname" value="${q.name.backend.get.request_1}"/>
+        <property name="connectionFactory" ref="activeMQConnectionFactory"/>
+    </bean>
+
+    <bean id="backendHandlerChain" class="org.base.framework.jms.JmsHandlerChain">
+        <property name="handlers">
+            <list>
+                <ref bean="backend_coordinator"/>
+            </list>
+        </property>
+    </bean>
+
+
+    <bean id="activeMQConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL">
+            <value>${q.brokerUrl_send}</value> <!-- 对应前端的“发送” -->
+        </property>
+        <property name="useAsyncSend" value="true"/>
+    </bean>
+
+
+</beans>
