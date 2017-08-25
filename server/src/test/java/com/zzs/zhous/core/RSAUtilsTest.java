@@ -20,6 +20,9 @@ public class RSAUtilsTest {
 
     private final static Logger logger = LoggerFactory.getLogger(RSAUtilsTest.class);
 
+    private RSAUtils rsaUtils = new RSAUtils();
+
+
 
     /**
      *
@@ -27,8 +30,10 @@ public class RSAUtilsTest {
     public RSAUtilsTest() {
     }
 
-
-    private RSAUtils rsaUtils = new RSAUtils();
+    @Test
+    public void logTest(){
+        logger.info("sdas:{}", "asd");
+    }
 
 
     /**
