@@ -10,8 +10,8 @@ import java.util.Map;
  *
  */
 public interface KeyUpdaterExceutor {
-	public Object run(Map<String, Object> args);
+	Object run(Map<String, Object> args);
 	
-	public void stop();
+	void stop();
 	
 }

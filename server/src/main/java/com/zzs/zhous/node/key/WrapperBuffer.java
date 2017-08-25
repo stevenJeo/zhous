@@ -14,11 +14,9 @@ import java.util.List;
  * @author Administrator
  */
 public class WrapperBuffer<T> {  ////TODO 采用的BlockingQ等方式如何?
-
     private final static Logger log = LoggerFactory.getLogger(WrapperBuffer.class);
 
     //private AtomicInteger lock;
-
 
     public WrapperBuffer() {
         //lock=new AtomicInteger(0);
@@ -87,12 +85,10 @@ public class WrapperBuffer<T> {  ////TODO 采用的BlockingQ等方式如何?
             }
         }
 
-
         if (c == -1)
             return null;
         else
             return list.get(p);
-
     }
 
     public boolean ifFull() {
@@ -116,16 +112,10 @@ public class WrapperBuffer<T> {  ////TODO 采用的BlockingQ等方式如何?
     }
 
 
-    /**
-     * @return the maxLength
-     */
     public int getMaxLength() {
         return maxLength;
     }
 
-    /**
-     * @param maxLength the maxLength to set
-     */
     public void setMaxLength(int maxLength) {
         if (maxLength < list.size())
             this.maxLength = list.size();
@@ -133,9 +123,6 @@ public class WrapperBuffer<T> {  ////TODO 采用的BlockingQ等方式如何?
             this.maxLength = maxLength;
     }
 
-    /**
-     * @return the curLength
-     */
     public int getCurLength() {
         return list.size();
     }

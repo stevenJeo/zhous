@@ -16,12 +16,12 @@ import java.io.FileWriter;
 /**
  * @author Administrator
  */
+//@RunWith(SpringJUnit4ClassRunner.class)
 public class RSAUtilsTest {
 
     private final static Logger logger = LoggerFactory.getLogger(RSAUtilsTest.class);
 
     private RSAUtils rsaUtils = new RSAUtils();
-
 
 
     /**
@@ -31,8 +31,9 @@ public class RSAUtilsTest {
     }
 
     @Test
-    public void logTest(){
+    public void logTest() {
         logger.info("sdas:{}", "asd");
+        logger.debug("debug_info={}", "debug");
     }
 
 
@@ -55,27 +56,31 @@ public class RSAUtilsTest {
 
 
         String publicKey = "003_001_publickey";
-        String publicKeyId = "003_001_publickey_20141101";
+        String publicKeyId = "20141101";
 
         String privateKey = "003_001_privatekey";
-        String privateKeyId = "003_001_privatekey_20141101";
+        String privateKeyId = "20141101";
 
 
         String plainText = randomString(2048);
-        for (int i = 0; i < 1000; i++) {
 
 
-            //rsaUtils.setKeystorePath("key/java.keystore");
+        //rsaUtils.setKeystorePath("key/java.keystore");
 
-            String encryptedString = rsaUtils.encryptByPublicKey(plainText, publicKey, publicKeyId);
 
-            String originalString = rsaUtils.decryptByPrivateKey(encryptedString, privateKey, privateKeyId);
+        logger.info("=======plainText====={}", plainText);
 
-            if (plainText.equals(originalString))
-                System.out.println("ok");
-            else
-                System.out.println("error");
-        }
+        String encryptedString = rsaUtils.encryptByPublicKey(plainText, publicKey, publicKeyId);
+        logger.info("=======encryptedString======={}", encryptedString);
+
+        String originalString = rsaUtils.decryptByPrivateKey(encryptedString, privateKey, privateKeyId);
+        logger.info("=======originalString========{}", originalString);
+
+
+        if (plainText.equals(originalString))
+            System.out.println("ok");
+        else
+            System.out.println("error");
 
     }
 

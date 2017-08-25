@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.zzs.zhous.node.key;
 
@@ -10,98 +10,55 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author Administrator
- *
  */
 public class Wrapper<T> {
-	
-	private final static Logger logger = LoggerFactory.getLogger(Wrapper.class);
-	/**
-	 * 
-	 */
-	public Wrapper(T t, boolean isBusy) {
-		this.t=t;
-		busy=new AtomicBoolean(isBusy);
-	}
-	
-	//private boolean busy=false;
-	private int count=0;
-	private String comment;
-	//private String[] log=new String[10];
-	
-	private T t;
+    private final static Logger logger = LoggerFactory.getLogger(Wrapper.class);
 
-	private final AtomicBoolean busy;
-	
-	
+    //private boolean busy=false;
+    private int count = 0;
+    private String comment;
+    //private String[] log=new String[10];
 
-	/**
-	 * @return the busy
-	 */
-	public boolean isBusy() {
-		return busy.get();
-	}
+    private T t;
+    private final AtomicBoolean busy;
 
-//	/**
-//	 * @param busy the busy to set
-//	 */
-//	public void setBusy(boolean busy) {
-//		
-//		
-//		this.busy = busy;
-//	}
 
-	
-	public boolean compareAndSet(boolean expect,boolean update){
-		return busy.compareAndSet(expect, update);
-	}
-	
-	
-	
-	/**
-	 * @return the count
-	 */
-	public int getCount() {
-		return count;
-	}
+    public Wrapper(T t, boolean isBusy) {
+        this.t = t;
+        busy = new AtomicBoolean(isBusy);
+    }
 
-//	/**
-//	 * @param count the count to set
-//	 */
-//	public void addCount() {
-//		this.count++;
-//	}
+    public boolean isBusy() {
+        return busy.get();
+    }
 
-	/**
-	 * @return the t
-	 */
-	public T getT() {
-		count++;
-		return t;
-	}
+    public boolean compareAndSet(boolean expect, boolean update) {
+        return busy.compareAndSet(expect, update);
+    }
 
-	
-	/**
-	 * @return the comment
-	 */
-	public String getComment() {
-		return comment;
-	}
+    public int getCount() {
+        return count;
+    }
 
-	/**
-	 * @param comment the comment to set
-	 */
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+    public T getT() {
+        count++;
+        return t;
+    }
 
-	/**
-	 * 释放wrap对象。
-	 * 同时计数被使用的次数。
-	 * @param wrap
-	 */
-	public void free(){
-		while(!busy.compareAndSet(true, false))
-			logger.error(" multiThread set wrapper free ");
-	}
-	
+    /**
+     * 释放wrap对象。
+     * 同时计数被使用的次数。
+     */
+    public void free() {
+        while (!busy.compareAndSet(true, false))
+            logger.error(" multiThread set wrapper free ");
+    }
+
+    public String getComment() {
+        return comment;
+    }
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
 }

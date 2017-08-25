@@ -20,7 +20,7 @@
         <org.springframework.version>4.3.9.RELEASE</org.springframework.version>
         <org.projectlombok.version>1.16.10</org.projectlombok.version>
         <org.slf4j.version>1.7.2</org.slf4j.version>
-        <ch.qos.logback.version>1.1.7</ch.qos.logback.version>
+        <logback.version>1.1.7</logback.version>
         <org.apache.activemq.version>5.14.0</org.apache.activemq.version>
         <javax.servlet.version>3.1.0</javax.servlet.version>
         <org.codehaus.jackson.version>1.9.13</org.codehaus.jackson.version>
@@ -28,6 +28,8 @@
         <commons-codec.version>1.6</commons-codec.version>
         <commons-lang.version>2.3</commons-lang.version>
         <test.junit.version>4.12</test.junit.version>
+        <spring-test.version>4.3.7.RELEASE</spring-test.version>
+
     </properties>
 
     <dependencyManagement>
@@ -64,17 +66,31 @@
                 <artifactId>lombok</artifactId>
                 <version>${org.projectlombok.version}</version>
             </dependency>
+
+
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>${org.slf4j.version}</version>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
-                <version>${ch.qos.logback.version}</version>
+                <version>${logback.version}</version>
                 <!--<scope>test</scope>-->
             </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.slf4j</groupId>-->
+                <!--<artifactId>slf4j-api</artifactId>-->
+                <!--<version>1.7.21</version>-->
+            <!--</dependency>-->
+            <!--<dependency>-->
+                <!--<groupId>org.slf4j</groupId>-->
+                <!--<artifactId>log4j-over-slf4j</artifactId>-->
+                <!--<version>1.7.7</version>-->
+            <!--</dependency>-->
+
+
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-client</artifactId>
@@ -116,6 +132,12 @@
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${test.junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring-test.version}</version>
                 <scope>test</scope>
             </dependency>
 
