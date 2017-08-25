@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by zhishuai.zhou on 2017/8/21.
  */
 public class ObjectWait {
+
     private final static Logger logger = LoggerFactory.getLogger(ObjectWait.class);
 
     private AtomicInteger lock;
@@ -133,4 +134,6 @@ public class ObjectWait {
 //		public Object[] getArray(){
 //			return objBuf;
 //		}
+
+
 }

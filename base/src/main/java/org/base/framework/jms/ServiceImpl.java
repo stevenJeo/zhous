@@ -41,9 +41,8 @@ public class ServiceImpl implements Service {
      * version_service_app_chianPostfix
      * service_app_chianPostfix
      *
-     *@see org.base.framework.
-     * @see org.owens.framework.core.jms.DefaultJmsService.getChainKey()
-     * @see org.owens.framework.core.jms.backend.DefaultBackendHandler.getChain()
+     * @see //org.zzs.framework.core.jms.DefaultJmsService.getChainKey()
+     * @see //org.zzs.framework.core.jms.backend.DefaultBackendHandler.getChain()
      */
     private JmsHandlerChain getChain(String app, String service, String version, StringBuilder kb) {
         //StringBuilder kb=getStringBuilder();

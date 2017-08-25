@@ -191,6 +191,10 @@ public class JmsHandlerChain extends DefaultHandlerChain {
         long t2 = 0;
         long t3 = 0;
         JmsMessage exceptionMessage = null;
+
+        if (log.isWarnEnabled())
+            log.warn("thread bgn=[{}] [{}]", Thread.currentThread().getName(), Thread.currentThread().getId());
+
         try {
             if (performanceCheck) t0 = System.currentTimeMillis();
             List<Handler> handlers = this.getHandlers();
@@ -199,24 +203,24 @@ public class JmsHandlerChain extends DefaultHandlerChain {
             for (int i = 0; i < size; i++) {
                 if (args.containsKey(KeyJmsBreakChain)) {
                     transactionHandler(args, args.containsKey(KeyJmsBreakChainCommit));
-//                    if (args.containsKey(KeyJmsBreakChainCommit)) {
-//                        //提交事务
-//                        if (args.containsKey(KeyJmsTransaction)) {
-//                            TransactionStatus status = (TransactionStatus) args.get(JmsHandlerChain.KeyJmsTransaction);
-//                            if (status != null && !status.isCompleted()) {
-//                                log.info("JmsHandlerChain break,transaction id={} completed={} has been submit", status, status.isCompleted());
-//                                transactionManager.commit(status);
-//                            }
-//                        }
-//                    } else {
-//                        if (args.containsKey(KeyJmsTransaction)) {
-//                            TransactionStatus status = (TransactionStatus) args.get(JmsHandlerChain.KeyJmsTransaction);
-//                            if (status != null && !status.isCompleted()) {
-//                                log.info("JmsHandlerChain break,transaction id={} completed={} has been rollback", status, status.isCompleted());
-//                                transactionManager.rollback(status);
-//                            }
-//                        }
-//                    }
+//					if(args.containsKey(KeyJmsBreakChainCommit)) {
+//						//提交事务
+//						if(args.containsKey(KeyJmsTransaction)){
+//							TransactionStatus status = (TransactionStatus)args.get(JmsHandlerChain.KeyJmsTransaction);
+//							if(status!=null && !status.isCompleted()){
+//								log.info("JmsHandlerChain break,transaction id={} completed={} has been submit",status,status.isCompleted());
+//								transactionManager.commit(status);
+//							}
+//						}
+//					}else {
+//						if(args.containsKey(KeyJmsTransaction)){
+//							TransactionStatus status = (TransactionStatus)args.get(JmsHandlerChain.KeyJmsTransaction);
+//							if(status!=null && !status.isCompleted()){
+//								log.info("JmsHandlerChain break,transaction id={} completed={} has been rollback",status,status.isCompleted());
+//								transactionManager.rollback(status);
+//							}
+//						}
+//					}
                     //生成返回结果.（ExceptionMessage,true）
                     exceptionMessage = buildExceptionMessage(args, false, null);
                     if (log.isDebugEnabled()) log.debug("handler no." + i + " asks to break");
@@ -224,15 +228,15 @@ public class JmsHandlerChain extends DefaultHandlerChain {
                 }
 
                 Handler handler = handlers.get(i);
-                if (log.isDebugEnabled()) log.debug("handler no." + i + " begin");
+                if (log.isDebugEnabled()) log.debug("handler no.{}-[{}] begin", i, handler);
                 if (performanceCheck) t1 = System.currentTimeMillis();
                 handler.exceute(args);
                 if (performanceCheck) {
                     t2 = System.currentTimeMillis();
                     if ((t2 - t1) > threshold)
-                        log.error(String.format("[chain=%s handler=%s] t=%d", this, handler, t2 - t1));
+                        log.error(String.format("handler-performanceCheck [chain=%s handler=%s] t=%d", this, handler, t2 - t1));
                 }
-                if (log.isDebugEnabled()) log.debug("handler no." + i + " end");
+                if (log.isDebugEnabled()) log.debug("handler no.{}-[{}] end", i, handler);
             }
 
         } catch (BreakChainException e) {
@@ -282,10 +286,13 @@ public class JmsHandlerChain extends DefaultHandlerChain {
 
             if (performanceCheck) {
                 t3 = System.currentTimeMillis();
-                if ((t3 - t0) > threshold) log.error(String.format("[chain=%s] t=%d", this, t3 - t0));
+                if ((t3 - t0) > threshold)
+                    log.error(String.format("chain-performanceCheck [chain=%s] t=%d", this, t3 - t0));
             }
-        }
 
+            if (log.isWarnEnabled())
+                log.warn("thread end=[{}] [{}]", Thread.currentThread().getName(), Thread.currentThread().getId());
+        }
 
     }
 }

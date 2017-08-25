@@ -20,6 +20,7 @@ public class Server {
 
     private static TaskThreadPool pool;
 
+
     public static void main(String[] args) throws Exception {
 
 //		String dirPath=Thread.currentThread().getContextClassLoader().getResource("").getPath();
@@ -70,29 +71,30 @@ public class Server {
         HandlerChain backendChain = (HandlerChain) SpringContextHelper.getBean("backendHandlerChain");
 
         //startBackendChain(backendChain);
-        TaskThread tt = pool.getTaskThread();//分配线程1
+        TaskThread tt = pool.getTaskThread();
         tt.setThreadPriority(Thread.NORM_PRIORITY + 2);
         Map<String, Object> taskArgs = tt.getArgs();
         taskArgs.clear();
         taskArgs.put(BackendHandler.cursorKey, "2");
-        taskArgs.put(BackendHandler.cursorStepKey, "1");
+        taskArgs.put(BackendHandler.cursorStepKey, "2");
         if (!tt.addTask(backendChain))
             log.error("cannot start backendHandlerChain!");
         else if (log.isInfoEnabled()) log.info("start backendHandlerChain.1:next=2,cursor=1,args={}", taskArgs);
 
-        tt = pool.getTaskThread();//分配线程2
+        tt = pool.getTaskThread();
         tt.setThreadPriority(Thread.NORM_PRIORITY + 2);
         taskArgs = tt.getArgs();
         taskArgs.clear();
         taskArgs.put(BackendHandler.cursorKey, "3");
-        taskArgs.put(BackendHandler.cursorStepKey, "1");
+        taskArgs.put(BackendHandler.cursorStepKey, "2");
         if (!tt.addTask(backendChain))
             log.error("cannot start backendHandlerChain!");
-        else if (log.isInfoEnabled()) log.info("start backendHandlerChain.1:next=2,cursor=1,args={}", taskArgs);
+        else if (log.isInfoEnabled()) log.info("start backendHandlerChain.2:next=3,cursor=1,args={}", taskArgs);
 
 
         if (log.isInfoEnabled()) log.info("main runs sleep loop ");
         String line = null;
+        StringBuilder sb = new StringBuilder();
         while (true) {
             //System.console().writer().write("input=");
             //line=System.console().readLine();
@@ -102,7 +104,11 @@ public class Server {
 //				break;
 //			}
 
-            Thread.currentThread().sleep(100000);
+            Thread.currentThread().sleep(30000);
+            sb.delete(0, sb.length());
+            pool.statString(sb);
+//			System.out.println(sb.toString());
+            if (log.isDebugEnabled()) log.debug("TaskThreadPool static :\n {}", sb.toString());
 
         }
 

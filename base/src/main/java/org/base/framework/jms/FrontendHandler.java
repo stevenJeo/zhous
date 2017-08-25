@@ -69,8 +69,7 @@ public class FrontendHandler implements Handler {
      * 按约定，请求方会传来可能的chainkey组合,而且按优先级存放，优先级高的放在前面。
      * 使用CoreService.uprightSlash分割。
      *
-     * @see org.owens.framework.core.jms.DefaultJmsService。getChainKey()
-     * @see
+     * @see //org.zzs.framework.core.jms.DefaultJmsService。getChainKey()
      */
     private HandlerChain getChain(String key) {
         HandlerChain taskHandlerChain = null;

@@ -22,21 +22,21 @@ public class SpringContextHelper implements ServletContextAware {
     private static ServletContext servletContext = null;
 
     public static void init() {
-//        String ContextPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-//        String log4jProperties = ContextPath + "log4j.properties";
+//		String ContextPath=Thread.currentThread().getContextClassLoader().getResource("").getPath();
+//		String log4jProperties=ContextPath+"log4j.properties";
 //
-//        if (log.isInfoEnabled()) log.info("log4jProperties=" + log4jProperties);
-//        //String contextResourceLocation = (String) initObj;
-//        //PropertyConfigurator.configure (log4jProperties);
-//        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-//        loggerContext.reset();
-//        JoranConfigurator joranConfigurator = new JoranConfigurator();
-//        joranConfigurator.setContext(loggerContext);
-//        try {
-//            joranConfigurator.doConfigure(log4jProperties);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+//		if(log.isInfoEnabled())log.info("log4jProperties="+log4jProperties);
+//		//String contextResourceLocation = (String) initObj;
+//		//PropertyConfigurator.configure (log4jProperties);
+//        LoggerContext loggerContext = (LoggerContext)LoggerFactory.getILoggerFactory();
+//	    loggerContext.reset();
+//	    JoranConfigurator joranConfigurator = new JoranConfigurator();
+//	    joranConfigurator.setContext(loggerContext);
+//	    try {
+//	    	joranConfigurator.doConfigure(log4jProperties);
+//	    } catch (Exception e) {
+//	    	e.printStackTrace();
+//	    }
         //BasicConfigurator.configureByResource(new URL(""));
         //if(log.isInfoEnabled())log.info("using default context xml configuration="+ContextPath+"\\applicationContext.xml");
         //ApplicationContext act = new ClassPathXmlApplicationContext(new String[]{"applicationContext.xml"});

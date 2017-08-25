@@ -12,6 +12,7 @@ public class JmsMessageHelper {
 
     private static ObjectMapper mapper = new ObjectMapper()
             .configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            //json中对象首字母大写
             .setPropertyNamingStrategy(new UpperCaseNameStrategy());
 
     static {

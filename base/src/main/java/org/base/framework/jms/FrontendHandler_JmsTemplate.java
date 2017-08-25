@@ -16,7 +16,6 @@ import java.util.Map;
  */
 public class FrontendHandler_JmsTemplate implements Handler {
 
-
     private final Logger logger = LoggerFactory.getLogger(FrontendHandler_JmsTemplate.class);
 
     private long timeout = 1000;
@@ -39,7 +38,7 @@ public class FrontendHandler_JmsTemplate implements Handler {
         this.destination = destination;
     }
 
-    private boolean stopFlag=false;
+    private boolean stopFlag = false;
 
 
     /* (non-Javadoc)
@@ -53,57 +52,59 @@ public class FrontendHandler_JmsTemplate implements Handler {
      */
     public void exceute(Map args) throws Exception {
 
-        int i=0;
+        int i = 0;
         jmsTemplate.setReceiveTimeout(timeout);
-        if (logger.isInfoEnabled())logger.info("Start frontendHandler..."+Thread.currentThread().getName());
+        if (logger.isInfoEnabled()) logger.info("Start frontendHandler..." + Thread.currentThread().getName());
 
-        while(!stopFlag){
+        while (!stopFlag) {
             try {
-                if (logger.isDebugEnabled())logger.debug("frontend start receiving reply");
+                if (logger.isDebugEnabled()) logger.debug("frontend start receiving reply");
                 Message message = jmsTemplate.receive(destination);
-                if (logger.isDebugEnabled())logger.debug("frontend end receiving reply message="+message);
+                if (logger.isDebugEnabled()) logger.debug("frontend end receiving reply message=" + message);
                 if (message != null && message instanceof TextMessage) {
                     TextMessage tmsg = (TextMessage) message;
-                    if (logger.isDebugEnabled())logger.debug(" receive reply content : " + tmsg.getText());
+                    if (logger.isDebugEnabled()) logger.debug(" receive reply content : " + tmsg.getText());
                     //是用TextMessage的JMSCorrelationID来指定id，避免了一次还原对象
-                    if(tmsg.getJMSCorrelationID()==null){
+                    if (tmsg.getJMSCorrelationID() == null) {
                         //表示需要异步处理结果
-                        JmsHandlerChain taskHandlerChain=(JmsHandlerChain) SpringContextHelper.getBean(tmsg.getJMSType());
-                        if(taskHandlerChain==null)
-                            logger.error("cannot find chain for "+tmsg.getJMSType());
-                        else{
+                        JmsHandlerChain taskHandlerChain = (JmsHandlerChain) SpringContextHelper.getBean(tmsg.getJMSType());
+                        if (taskHandlerChain == null)
+                            logger.error("cannot find chain for " + tmsg.getJMSType());
+                        else {
                             //当前是taskThread,args是Map<String,Object>
                             args.clear();
                             args.put(JmsHandlerChain.KeyJmsHandlerChain, taskHandlerChain);
-                            args.put(JmsHandlerChain.KeyJmsMessageString,tmsg.getText());
-                            if(!JmsMessage.NullReplyId.equals(tmsg.getJMSCorrelationID()))
-                                args.put(JmsHandlerChain.KeyJmsReplyId,tmsg.getJMSCorrelationID());
+                            args.put(JmsHandlerChain.KeyJmsMessageString, tmsg.getText());
+                            if (!JmsMessage.NullReplyId.equals(tmsg.getJMSCorrelationID()))
+                                args.put(JmsHandlerChain.KeyJmsReplyId, tmsg.getJMSCorrelationID());
 //							taskHandlerChain.initArgs();
 //							Map<String,Object> args1=taskHandlerChain.getArgs();
 //							args1.put(JmsHandlerChain.KeyJmsMessageString, tmsg.getText());
                             taskHandlerChain.run(args);
                         }
 
-                    }else{
+                    } else {
                         //表示有线程再等待结果
 //						int index=Integer.parseInt(tmsg.getJMSCorrelationID());
 //						InvokerObject iobj=(InvokerObject)ObjectWait.getInstance().getObject(index);
-                        String index=tmsg.getJMSCorrelationID();
-                        InvokerObject iobj=ObjectWait.getInstance().getObject(index);
+                        String index = tmsg.getJMSCorrelationID();
+                        InvokerObject iobj = ObjectWait.getInstance().getObject(index);
                         iobj.setResMessage(tmsg.getText());
                         //if(tmsg.getBooleanProperty(CoreMessage.IsException)) iobj.setException(true);
 
-                        synchronized (iobj){iobj.notify();}
+                        synchronized (iobj) {
+                            iobj.notify();
+                        }
                     }
                 }
             } catch (Exception e) {
-                logger.error("forintendHandler",e);
+                logger.error("forintendHandler", e);
             }
 
             //提示
             i++;
-            if(i>1000000)i=0;
-            if (logger.isDebugEnabled())logger.debug("frontend i="+i);
+            if (i > 1000000) i = 0;
+            if (logger.isDebugEnabled()) logger.debug("frontend i=" + i);
 
         }
     }

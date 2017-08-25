@@ -14,7 +14,7 @@ public class TaskThreadPool {
 
     private TaskThread[] pool;
 
-//    private int p = 0;
+//	private int p = 0;
 
     private static TaskThreadPool taskPool = null;
 
@@ -28,15 +28,7 @@ public class TaskThreadPool {
      * @return
      */
     public static TaskThreadPool getInstance() {
-
-        if (taskPool == null) {
-            synchronized (taskPool) {
-                if (taskPool == null)
-                    taskPool = new TaskThreadPool();
-            }
-        }
-
-
+        if (taskPool == null) taskPool = new TaskThreadPool();
         return taskPool;
     }
 
@@ -94,13 +86,32 @@ public class TaskThreadPool {
         }
     }
 
+
+    public int stat() {
+        int free = 0;
+        for (int i = 0; i < pool.length; i = i + 1) {
+            if (!pool[i].isBusy()) free++;
+        }
+
+        return free;
+    }
+
     /**
      * @return
      */
     public TaskThread getTaskThread(int cursor, int step) {
         for (int i = cursor; i < pool.length; i = i + step)
-            if (!pool[i].isBusy()) return pool[i];
+            if (!pool[i].isBusy())
+                return pool[i];
 
         return null;
+    }
+
+    public void statString(StringBuilder buffer) {
+        for (int i = 0; i < pool.length; i++) {
+            buffer.append("\n[" + i + "]\t");
+            if (pool[i] != null) pool[i].stat(buffer);
+
+        }
     }
 }

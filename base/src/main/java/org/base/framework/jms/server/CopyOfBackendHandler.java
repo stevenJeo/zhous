@@ -32,11 +32,8 @@ public class CopyOfBackendHandler implements Handler {
     public final String doesPerformanceTrackKey = "doesPerformanceTrack";
 
     private long timeout = 1000;
-
     private JmsTemplate jmsTemplate;
-
     private Destination destination;
-
     private int taskCount;
 
 

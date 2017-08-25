@@ -19,6 +19,7 @@ import java.util.Map;
 public class DefaultSendReplyHandler implements Handler {
     private final Logger log = LoggerFactory.getLogger(DefaultSendReplyHandler.class);
 
+
     @Autowired(required = false)
     private JmsCoreService jmsCoreService = null;
 
@@ -45,6 +46,9 @@ public class DefaultSendReplyHandler implements Handler {
         }
         if (chain.isDirectCall()) return;
         jmsCoreService.send(msg);
+
+        if (log.isWarnEnabled())
+            log.warn("thread DefaultSendReplyHandler end={} {}", Thread.currentThread().getName(), Thread.currentThread().getId());
 
     }
 

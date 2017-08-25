@@ -29,7 +29,6 @@ import java.util.Map;
 public class BackendHandler implements Handler {
     private final Logger logger = LoggerFactory.getLogger(BackendHandler.class);
 
-
     public static String cursorKey = "cursorKeyString";
     public static String cursorStepKey = "cursorStepKeyString";
     public static boolean doesPerformanceTrack = true;
@@ -40,26 +39,17 @@ public class BackendHandler implements Handler {
     private long timeout = 1000;
     private String qname;
     private int sessionAckMode = Session.AUTO_ACKNOWLEDGE;
-
     private ActiveMQConnectionFactory connectionFactory;
-
     private int taskCount;
+
+
 
     public void setTimeout(long timeout) {
         this.timeout = timeout;
     }
-
-    /**
-     * @param qname the qname to set
-     */
     public void setQname(String qname) {
         this.qname = qname;
     }
-
-
-    /**
-     * @param connectionFactory the connectionFactory to set
-     */
     public void setConnectionFactory(ActiveMQConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
@@ -105,7 +95,7 @@ public class BackendHandler implements Handler {
      * 按约定，请求方会传来可能的chainkey组合,而且按优先级存放，优先级高的放在前面。
      * 使用CoreService.uprightSlash分割。
      * <p>
-     * 参考： org.owens.framework.core.jms.DefaultJmsService.getChainKey()
+     * 参考： org.zzs.framework.core.jms.DefaultJmsService.getChainKey()
      */
     private HandlerChain getChain(String key) {
         HandlerChain taskHandlerChain = null;
@@ -201,7 +191,7 @@ public class BackendHandler implements Handler {
                                     taskArgs.put(JmsHandlerChain.KeyJmsMessageString, tmsg.getText());
                                     if (!JmsMessage.NullReplyId.equals(tmsg.getJMSCorrelationID()))
                                         taskArgs.put(JmsHandlerChain.KeyJmsReplyId, tmsg.getJMSCorrelationID());
-                                    taskThread.addTask(taskHandlerChain);//业务链处理
+                                    taskThread.addTask(taskHandlerChain);
                                     if (doesPerformanceTrack) {
                                         t3 = System.currentTimeMillis();
                                         if (t3 - t1 > timeThreshold)
@@ -209,9 +199,11 @@ public class BackendHandler implements Handler {
                                     }
                                     break;
                                 } else {
-                                    logger.warn("cann't find free taskThread, try after 100ms! next={},cursor={},cursorStep={},poolSize={}"
-                                            , next, cursor, cursorStep, TaskThreadPool.getInstance().getSize());
-                                    Thread.currentThread().sleep(100);
+                                    int free = TaskThreadPool.getInstance().stat();
+                                    logger.warn("cann't find free taskThread, try after 100ms! next={},cursor={},cursorStep={},poolSize={} ,free={}"
+                                            , next, cursor, cursorStep, TaskThreadPool.getInstance().getSize(), free);
+                                    next = cursor;
+                                    Thread.currentThread().sleep(10);
                                 }
                             }
                         }

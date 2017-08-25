@@ -23,11 +23,30 @@ public class DefaultBeginTransactionHandler implements Handler {
     @Autowired(required = false)
     private PlatformTransactionManager transactionManager;
 
+//    @Autowired(required=false)
+//    @Qualifier("dataSource")
+//    private BoneCPDataSource datasource;
 
+
+    /* (non-Javadoc)
+     * @see org.owens.framework.chain.Handler#exceute(java.util.Map)
+     */
+    @Override
     public void exceute(Map<String, Object> args) throws Exception {
         JmsHandlerChain chain = (JmsHandlerChain) args.get(JmsHandlerChain.KeyJmsHandlerChain);
         ////TODO 定义jms的Exception？
         if (chain == null) throw new Exception("必须定义使用JmsHandlerChain");
+
+        //debug datasource.pool
+//        if(logger.isDebugEnabled()){
+//            if(null==datasource)datasource = (BoneCPDataSource) SpringContextHelper.getBean("dataSource");
+//            if(null!=datasource){
+//                logger.debug("datasource.using={}, PoolAvailabilityThreshold={}",datasource.getTotalLeased(),datasource.getPoolAvailabilityThreshold());
+//                logger.debug("datasource.ReleaseHelperThreads={},",datasource.getReleaseHelperThreads());
+//            }else
+//                logger.debug("get.datasource is null...");
+//        }
+
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         // explicitly setting the transaction name is something that can only be done programmatically
         ////TODO add System.nanoTime()? Thread.currentThread().getName() should be unique?
@@ -39,5 +58,14 @@ public class DefaultBeginTransactionHandler implements Handler {
 
         if (logger.isDebugEnabled())
             logger.debug("begin new transaction name={}:id={},completed={},newTransaction={}", def.getName(), status, status.isCompleted(), status.isNewTransaction());
+
+        //debug datasource.pool
+//        if(logger.isDebugEnabled()){
+//            if(null!=datasource){
+//                logger.debug("datasource.using={}, PoolAvailabilityThreshold={}",datasource.getTotalLeased(),datasource.getPoolAvailabilityThreshold());
+//                logger.debug("datasource.ReleaseHelperThreads={},",datasource.getReleaseHelperThreads());
+//            }else
+//                logger.debug("get.datasource is null...");
+//        }
     }
 }

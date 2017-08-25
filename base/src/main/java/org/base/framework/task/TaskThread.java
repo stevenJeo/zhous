@@ -78,7 +78,7 @@ public class TaskThread implements Runnable {
                     if (logger.isDebugEnabled()) logger.debug("Thread wake up ..");
                     amIRunning = true;
                 }
-//                bizRun(handlerChain, args);
+//				bizRun(handlerChain,args);
                 handlerChain.run(args);
                 args.clear();
 
@@ -92,6 +92,25 @@ public class TaskThread implements Runnable {
     }
 
 
+    public void stat(StringBuilder buffer) {
+
+        if (thread != null)
+            buffer.append(thread.getName());
+        else
+            buffer.append("null");
+
+        if (thread != null)
+            buffer.append("\t" + thread.getState());
+        else
+            buffer.append("\tnull");
+
+        if (amIRunning)
+            buffer.append("\t1 ");
+        else
+            buffer.append("\t0 ");
+
+    }
+
     public int getId() {
         return this.id;
     }
@@ -103,6 +122,10 @@ public class TaskThread implements Runnable {
     //public abstract void bizRun(HandlerChain chain,Map<String, Object> task)throws Exception;
 
     public boolean isBusy() {
+//		if(amIRunning)return true;
+//		boolean tmp=thread.getState()==Thread.State.WAITING;
+//		tmp= amIRunning && tmp;
+//		return tmp;
         return amIRunning;
     }
 
@@ -131,14 +154,14 @@ public class TaskThread implements Runnable {
      */
     public boolean addTask(HandlerChain taskHandlerChain) {
         boolean retv = false;
-        if (logger.isDebugEnabled()) logger.debug("send task to Thread ");
+        if (logger.isDebugEnabled()) logger.debug("send task to Thread {}", id);
         synchronized (locker) {
             if (!amIRunning) {
                 //this.jsonTask=jsonTask;
                 amIRunning = true;
                 this.handlerChain = taskHandlerChain;
                 locker.notifyAll();
-                if (logger.isDebugEnabled()) logger.debug("wake up Thread ");
+                if (logger.isDebugEnabled()) logger.debug("wake up Thread {}", id);
                 retv = true;
             }
         }
